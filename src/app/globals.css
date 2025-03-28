@@ -10,6 +10,28 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --animate-wiggle: wiggle 0.2s;
+  --animate-shake: shake 0.1s infinite;
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: rotate(-1deg);
+    }
+    50% {
+      transform: rotate(1deg);
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
