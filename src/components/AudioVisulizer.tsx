@@ -11,14 +11,15 @@ import { FreqBlob } from "./audio-misc/FreqBlob";
 import FrequencyVisualizer from "./audio-misc/SineWave";
 import { Card } from "./ui/Card";
 import Image from "next/image";
-import icon from "@/assets/never-too-old.jpeg";
+import LyricsPlayer from "./LyricsPlayer";
+import { activeSong } from "@/assets/songs";
 
 export const AudioVisualizer = () => {
   const [isKick, setIsKick] = useState(false);
   const [isConsideredKick, setIsConsideredKick] = useState(false);
   const [isChorus, setIsChorus] = useState(false);
 
-  useAudioDataLoader("/song.mp3");
+  useAudioDataLoader(activeSong.audio);
   useCalculateHighEnergyFrames();
   useDetectChorusSections();
 
@@ -71,16 +72,23 @@ export const AudioVisualizer = () => {
     <div
       className={cx(["w-full flex-1 relative", isChorus && "animate-shake"])}
     >
-      <Card
-        className={cx([
-          "z-50 flex flex-col gap-4 w-full max-w-md bg-white/10 p-10 text-center backdrop-blur-3xl absolute top-1/2 left-1/2 -translate-1/2 border-none",
-          isKick && "animate-wiggle",
-        ])}
-      >
-        <Image src={icon} alt="icon" className="rounded-lg" />
-        <p className="text-lg font-bold">Never too Old</p>
-        <p className="">Song by Monrroe ‧ 2019</p>
-      </Card>
+      <div className="z-50 absolute top-1/2 left-1/2 -translate-1/2 flex gap-4">
+        <Card
+          className={cx([
+            "flex flex-col gap-4 w-full bg-white/10 p-6 text-center backdrop-blur-3xl border-none",
+            isKick && "animate-wiggle",
+          ])}
+        >
+          <Image
+            src={activeSong.image}
+            alt="icon"
+            className="rounded-lg min-w-64"
+          />
+          <p className="text-lg font-bold">{activeSong.title}</p>
+          <p className="">{activeSong.desc}</p>
+        </Card>
+        <LyricsPlayer lrcText={activeSong.lyrics} />
+      </div>
 
       <div
         style={{
@@ -91,13 +99,19 @@ export const AudioVisualizer = () => {
         }}
         className={cx(["absolute left-0 top-0 h-full w-full rounded-lg"])}
       />
-      <div className="absolute bottom-0 left-0 z-50 w-full">
+      <div className="absolute bottom-0 left-0 z-40 w-full">
         <FrequencyVisualizer />
       </div>
       <FreqBlob
-        volume={decibelsToScaleLog(volumes.mid)}
+        volume={decibelsToScaleLog(volumes.mid * 0.8)}
         className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
-        color="rgba(245, 39, 245, 0.8)"
+        color="rgba(245, 39, 215, 0.8)"
+      />
+
+      <FreqBlob
+        volume={decibelsToScaleLog(volumes.mid * 1.2)}
+        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
+        color="rgba(42, 14, 46, 0.4)"
       />
 
       <FreqBlob

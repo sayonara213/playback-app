@@ -6,21 +6,20 @@ import { useAnalyserStore } from "@/store/analyserStore";
 const FrequencyVisualizer: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Access the FFT data (in decibels) from the store
+  // Get the FFT data (in decibels) from the store
   const soundArray = useAnalyserStore((state) => state.soundArray);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Set the canvas size
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = 600; // Set desired height
     };
-
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
@@ -29,57 +28,57 @@ const FrequencyVisualizer: React.FC = () => {
     const renderFrame = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Create gradient for the stroke
+      // Create a gradient for the stroke
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
       gradient.addColorStop(0, "#57076B");
       gradient.addColorStop(0.25, "#D058EE");
       gradient.addColorStop(0.5, "#C110EB");
       gradient.addColorStop(0.75, "#5E286B");
       gradient.addColorStop(1, "#950DB8");
-
       ctx.strokeStyle = gradient;
 
       ctx.beginPath();
 
+      // Use all but the last 20 bins (as before)
       const bufferLength = soundArray.length - 20;
-      const sliceWidth = canvas.width / bufferLength;
+      // Calculate maximum log value to scale x-axis logarithmically
+      const maxLogIndex = Math.log10(bufferLength);
 
-      const minDb = -100; // Adjust based on expected range
-      const maxDb = 100;
+      // Use a normalized decibel range from -100 dB to 0 dB
+      const minDb = -100;
+      const maxDb = 0;
+
+      // Set a fixed line width for consistency
+      ctx.lineWidth = 2;
 
       for (let i = 0; i < bufferLength; i++) {
-        // Get decibel value and clamp it
+        // Clamp the decibel value
         let dbValue = soundArray[i];
         dbValue = Math.max(minDb, Math.min(maxDb, dbValue));
 
-        // Normalize to 0–1 range
+        // Normalize to a 0–1 range
         const linearValue = (dbValue - minDb) / (maxDb - minDb);
 
-        // Map to canvas height (invert y-axis)
+        // Map to canvas height (invert y-axis so 0 dB is at the top)
         const y = (1 - linearValue) * canvas.height;
 
-        const x = i * sliceWidth;
-
-        // Optional: Add random noise to y-value
-        const noise = Math.random() * 10 - 5; // Adjust as needed
-        const yWithNoise = y + noise;
-
-        // Optional: Random line width
-        ctx.lineWidth = Math.random() * 10 + 1; // Random line width between 1 and 11
+        // Map x using logarithmic scaling to spread out bass frequencies
+        const x = (Math.log10(i + 1) / maxLogIndex) * canvas.width;
 
         if (i === 0) {
-          ctx.moveTo(x, yWithNoise);
+          ctx.moveTo(x, y);
         } else {
-          ctx.lineTo(x, yWithNoise);
+          ctx.lineTo(x, y);
         }
       }
 
-      // Optional: Fill the area under the curve
+      // Create a closed path for the fill effect
       ctx.lineTo(canvas.width, canvas.height);
       ctx.lineTo(0, canvas.height);
       ctx.closePath();
 
-      ctx.fillStyle = "rgba(0, 0, 0, 0.5)"; // Adjust fill color as desired
+      // Fill under the curve
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.fill();
 
       // Apply shadow effects
@@ -87,15 +86,15 @@ const FrequencyVisualizer: React.FC = () => {
       ctx.shadowBlur = 20;
       ctx.shadowOffsetY = 5;
 
+      // Stroke the path
       ctx.stroke();
 
-      // Loop the animation
+      // Continue the animation loop
       animationFrameId = requestAnimationFrame(renderFrame);
     };
 
     renderFrame();
 
-    // Cleanup on component unmount
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resizeCanvas);

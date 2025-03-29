@@ -15,10 +15,12 @@ export default function HomePage() {
         initialWidth={80}
         className="bg-zinc-900 h-full"
       >
-        <div className="p-2">
-          <Avatar className="w-14 h-14">
-            <AvatarImage src={icon.src} />
-          </Avatar>
+        <div className="flex gap-4">
+          <div className="p-2">
+            <Avatar className="w-14 h-14">
+              <AvatarImage src={icon.src} />
+            </Avatar>
+          </div>
         </div>
       </ResizableSidebar>
       {/* Our resizable top panel (chat window) */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { activeSong } from "@/assets/songs";
 import { useAudioAnalyser } from "@/hooks/useAudio";
 import { AudioAnalyserManager } from "@/lib/audioAnalyser";
 import { useAnalyserStore } from "@/store/analyserStore";
@@ -49,7 +50,7 @@ export const AudioPlayer = () => {
         onPlay={handlePlay}
         className="w-full focus:outline-none"
       >
-        <source src="/song.mp3" type="audio/mpeg" />
+        <source src={activeSong.audio} type="audio/mpeg" />
         Your browser does not support the audio element.
       </audio>
     </div>
