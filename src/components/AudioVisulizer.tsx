@@ -7,17 +7,19 @@ import { volumeToColor, decibelsToScaleLog } from "@/lib/frequency";
 import { useAnalyserStore } from "@/store/analyserStore";
 import { cx } from "class-variance-authority";
 import React, { useEffect, useState } from "react";
-import { FreqBlob } from "./audio-misc/FreqBlob";
 import FrequencyVisualizer from "./audio-misc/SineWave";
 import { Card } from "./ui/Card";
 import Image from "next/image";
 import LyricsPlayer from "./LyricsPlayer";
 import { activeSong } from "@/assets/songs";
+import { BlobsPlayground } from "./BlobsPlayground";
 
 export const AudioVisualizer = () => {
   const [isKick, setIsKick] = useState(false);
   const [isConsideredKick, setIsConsideredKick] = useState(false);
-  const [isChorus, setIsChorus] = useState(false);
+  const [_, setIsChorus] = useState(false);
+
+  console.log(_);
 
   useAudioDataLoader(activeSong.audio);
   useCalculateHighEnergyFrames();
@@ -69,9 +71,7 @@ export const AudioVisualizer = () => {
   }, [currentTimestamp, chorusSections]);
 
   return (
-    <div
-      className={cx(["w-full flex-1 relative", isChorus && "animate-shake"])}
-    >
+    <div className={cx(["w-full flex-1 relative"])}>
       <div className="z-50 absolute top-1/2 left-1/2 -translate-1/2 flex gap-4">
         <Card
           className={cx([
@@ -102,39 +102,7 @@ export const AudioVisualizer = () => {
       <div className="absolute bottom-0 left-0 z-40 w-full">
         <FrequencyVisualizer />
       </div>
-      <FreqBlob
-        volume={decibelsToScaleLog(volumes.mid * 0.8)}
-        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
-        color="rgba(245, 39, 215, 0.8)"
-      />
-
-      <FreqBlob
-        volume={decibelsToScaleLog(volumes.mid * 1.2)}
-        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
-        color="rgba(42, 14, 46, 0.4)"
-      />
-
-      <FreqBlob
-        volume={decibelsToScaleLog(volumes.high) * 0.7}
-        className="absolute left-[24px] top-[24px] z-10"
-        color="rgba(155, 52, 235, 0.4)"
-      />
-      <FreqBlob
-        volume={decibelsToScaleLog(volumes.high) * 0.7}
-        className="absolute right-[24px] top-[24px] z-10"
-        color="rgba(155, 52, 235, 0.4)"
-      />
-      <FreqBlob
-        volume={decibelsToScaleLog(volumes.high) * 0.7}
-        className="absolute left-[24px] bottom-[24px] z-10"
-        color="rgba(155, 52, 235, 0.4)"
-      />
-      <FreqBlob
-        volume={decibelsToScaleLog(volumes.high) * 0.7}
-        className="absolute right-[24px] bottom-[24px] z-10"
-        color="rgba(155, 52, 235, 0.4)"
-      />
-
+      <BlobsPlayground volumes={volumes} />
       <div
         className="z-4 absolute h-full w-full bg-white"
         style={{

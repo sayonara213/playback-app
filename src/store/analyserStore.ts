@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface VolumeLevels {
+export interface VolumeLevels {
   low: number;
   mid: number;
   high: number;

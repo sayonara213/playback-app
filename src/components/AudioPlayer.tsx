@@ -30,7 +30,7 @@ export const AudioPlayer = () => {
 
     const updateTimestamp = () => {
       if (audioRef.current) {
-        setCurrentTimestamp(audioRef.current.currentTime - 0.2);
+        setCurrentTimestamp(audioRef.current.currentTime - 0.1);
       }
       animationFrameId = requestAnimationFrame(updateTimestamp);
     };

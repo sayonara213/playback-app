@@ -16,6 +16,13 @@ export const SONGS = [
     lyrics: "/Lady Gaga & Bruno Mars - Die With A Smile.lrc",
     audio: "/Lady Gaga, Bruno Mars – Die With A Smile.mp3",
   },
+  {
+    title: "Go Fuck Yourself",
+    desc: "Two Feet",
+    image: ladyGagaImage,
+    lyrics: "/Two Feet - Go Fuck Yourself.lrc",
+    audio: "/two-feet-go-fuck-yourself-(meloua.com).mp3",
+  },
 ];
 
-export const activeSong = SONGS[1];
+export const activeSong = SONGS[0];

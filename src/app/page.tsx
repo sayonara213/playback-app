@@ -25,7 +25,7 @@ export default function HomePage() {
       </ResizableSidebar>
       {/* Our resizable top panel (chat window) */}
       <section className="w-full flex flex-col">
-        <div className="w-full flex-1 flex flex-col">
+        <div className="w-full flex-1 flex flex-col overflow-hidden,">
           <AudioVisualizer />
         </div>
 
@@ -35,7 +35,7 @@ export default function HomePage() {
           initialHeight={250}
           className="bg-zinc-800"
         >
-          <div className="p-4">
+          <div className="p-4 ">
             <AudioPlayer />
           </div>
         </ResizableChatPanel>

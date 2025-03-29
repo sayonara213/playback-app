@@ -22,7 +22,7 @@ export const FreqBlob: React.FC<IFreqBlobProps> = ({
         width: `${volume}px`,
         height: `${volume}px`,
       }}
-      className={cx("rounded-full blur-3xl", className)}
+      className={cx("rounded-full blur-[100px]", className)}
     />
   );
 };
